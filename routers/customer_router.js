@@ -69,9 +69,16 @@ router.get("/account/balance", async (req, res) => {
         .json({ success: false, message: "id must be a number!" });
     }
 
-    const customer = getCustomerById(customerId);
+    const customer = await getCustomerById(customerId);
+    if (!customer) {
+      return res
+        .status(404)
+        .json({ success: false, message: "customer not found!" });
+    }
+
+    res.json({ success: true, data: customer.balance });
   } catch (err) {
     console.log(err.message);
-    return res.status(404).json("customer not found!");
+    return res.status(err.status).json(err.message);
   }
 });
