@@ -1,42 +1,46 @@
 [
   {
-    "customerId": "cust_1001",
+    "customerId": 1,
     "balance": 500,
-    "cart": [],
+    "cart": [
+      {
+        "bookId": 2,
+        "quantity": 1
+      },
+      {
+        "bookId": 3,
+        "quantity": 4
+      }
+    ],
     "createdAt": "2026-07-01T08:30:00Z"
   },
   {
-    "customerId": "cust_1002",
+    "customerId": 2,
     "balance": 500,
-    "cart": [
-      {
-        "productId": 2,
-        "quantity": 1
-      }
-    ],
+    "cart": [],
     "createdAt": "2026-07-05T14:15:00Z"
   },
   {
-    "customerId": "cust_1003",
+    "customerId": 3,
     "balance": 140,
     "cart": [
       {
-        "productId": 1,
+        "bookId": 1,
         "quantity": 2
       },
       {
-        "productId": 4,
+        "bookId": 4,
         "quantity": 1
       }
     ],
     "createdAt": "2026-06-20T10:00:00Z"
   },
   {
-    "customerId": "cust_1004",
+    "customerId": 4,
     "balance": 20,
     "cart": [
       {
-        "productId": 3,
+        "bookId": 3,
         "quantity": 1
       }
     ],

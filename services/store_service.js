@@ -9,3 +9,82 @@ export async function getBooks(inStock, maxPrice, search) {
   if (search) books = books.filter((book) => book.name.includes(search));
   return books;
 }
+
+export async function getCustomerById(customerId) {
+  const customers = await readData(DB_BASE_PATH + "/customers.json");
+  const customer = customers.find((c) => c.customerId === customerId);
+  return customer;
+}
+
+export async function getBookById(bookId) {
+  const books = await readData(DB_BASE_PATH + "/books.json");
+  const book = books.find((book) => book.id === bookId);
+  return book;
+}
+
+export async function addBookToCart(customerId, bookId, quantity) {
+  const customers = await readData(DB_BASE_PATH + "/customers.json");
+  const books = await readData(DB_BASE_PATH + "/books.json");
+
+  const customer = customers.find((c) => c.customerId === customerId);
+  if (!customer) {
+    const error = new Error("customer not found!");
+    error.status = 404;
+    throw error;
+  }
+
+  const book = books.find((book) => book.id === bookId);
+  if (!book) {
+    const error = new Error("book not found!");
+    error.status = 404;
+    throw error;
+  }
+
+  if (book.stock < quantity) {
+    const error = new Error("not enough books to buy!");
+    error.status = 400;
+    throw error;
+  }
+  if (!customer.cart) {
+    customer.cart = [];
+  }
+
+  const alreadyInCart = customer.cart.find((book) => book.bookId === bookId);
+
+  if (alreadyInCart) {
+    alreadyInCart.quantity += quantity;
+  } else {
+    customer.cart.push({ bookId, quantity });
+  }
+  await saveData(DB_BASE_PATH + "/customers.json", customers);
+
+  return customer.cart;
+}
+
+export async function removeBookFromCart(customerId, bookId) {
+  const customers = await readData(DB_BASE_PATH + "/customers.json");
+
+  const customer = customers.find((c) => c.customerId === customerId);
+  if (!customer) {
+    const error = new Error("customer not found!");
+    error.status = 404;
+    throw error;
+  }
+
+  const book = customer.cart.find((book) => book.bookId === bookId);
+  if (!book) {
+    const error = new Error("book was not found in the cart!");
+    error.status = 404;
+    throw error;
+  }
+
+  if (customer.cart.length === 0) {
+    const error = new Error("Cart is empty!");
+    error.status = 400;
+    throw error;
+  }
+
+  customer.cart = customer.cart.filter((book) => book.bookId !== bookId);
+
+  await saveData(DB_BASE_PATH + "/customers.json", customers);
+}
