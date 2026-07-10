@@ -7,7 +7,13 @@ import { removeBookFromCart } from "../services/store_service.js";
 export const router = express.Router();
 
 router.get("/cart", async (req, res) => {
-  const customerId = req.query.customerId;
+  const customerId = Number(req.query.customerId);
+
+  if (!req.query.customerId || isNaN(customerId) || customerId <= 0) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing or invalid customerId!" });
+  }
   const customer = await getCustomerById(customerId);
   if (!customer) {
     return res
@@ -39,13 +45,19 @@ router.post("/cart/items", async (req, res) => {
 
 router.delete("/cart/items/:bookId", async (req, res) => {
   try {
-    const customerId = +req.body.customerId;
-    const bookId = +req.params.bookId;
+    const customerId = Number(req.body.customerId);
+    const bookId = Number(req.params.bookId);
 
-    if (!customerId || isNaN(customerId) || !bookId || isNaN(bookId)) {
+    if (!req.body.customerId || isNaN(customerId) || customerId <= 0) {
       return res
         .status(400)
-        .json({ success: false, message: "id must be a number!" });
+        .json({ success: false, message: "Missing or invalid customerId!" });
+    }
+
+    if (!req.params.bookId || isNaN(bookId) || bookId <= 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing or invalid bookId!" });
     }
 
     await removeBookFromCart(customerId, bookId);
@@ -62,11 +74,11 @@ router.delete("/cart/items/:bookId", async (req, res) => {
 
 router.get("/account/balance", async (req, res) => {
   try {
-    const customerId = +req.query.customerId;
-    if (!customerId || isNaN(customerId)) {
+    const customerId = Number(req.query.customerId);
+    if (!req.query.customerId || isNaN(customerId) || customerId <= 0) {
       return res
         .status(400)
-        .json({ success: false, message: "id must be a number!" });
+        .json({ success: false, message: "Missing or invalid customerId!" });
     }
 
     const customer = await getCustomerById(customerId);
@@ -79,6 +91,7 @@ router.get("/account/balance", async (req, res) => {
     res.json({ success: true, data: customer.balance });
   } catch (err) {
     console.log(err.message);
-    return res.status(err.status).json(err.message);
+    const statusCode = err.status || 500;
+    return res.status(statusCode).json(err.message);
   }
 });

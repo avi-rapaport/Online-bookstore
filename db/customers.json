@@ -13,17 +13,8 @@
   },
   {
     "customerId": 3,
-    "balance": 140,
-    "cart": [
-      {
-        "bookId": 1,
-        "quantity": 2
-      },
-      {
-        "bookId": 4,
-        "quantity": 1
-      }
-    ],
+    "balance": 135,
+    "cart": [],
     "createdAt": "2026-06-20T10:00:00Z"
   },
   {
@@ -39,13 +30,8 @@
   },
   {
     "customerId": 10,
-    "balance": "500",
-    "cart": [
-      {
-        "bookId": 2,
-        "quantity": 1
-      }
-    ],
+    "balance": 415,
+    "cart": [],
     "createdAt": "2026-07-09T13:20:09.554Z"
   }
 ]

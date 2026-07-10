@@ -153,3 +153,11 @@ export async function checkOutAndCreateOrder(customerId) {
   await saveData(DB_BASE_PATH + "/customers.json", customers);
   await saveData(DB_BASE_PATH + "/orders.json", orders);
 }
+
+export async function getOrderByCustomerId(customerId) {
+  const allOrders = await readData(DB_BASE_PATH + "/orders.json");
+  const customerOrdrs = allOrders.filter(
+    (order) => order.customerId === customerId,
+  );
+  return customerOrdrs;
+}

@@ -20,6 +20,10 @@ app.get("/health", (req, res) => {
   res.end("server is healthy...");
 });
 
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: "Route not found!" });
+});
+
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
