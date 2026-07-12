@@ -16,15 +16,6 @@ A REST API for managing an online bookstore. The system allows customers to brow
 
 ---
 
-## Technologies
-
-- Node.js
-- Express.js
-- JavaScript (ES Modules)
-- JSON files as a simple database
-
----
-
 ## Installation
 
 Clone the repository:
@@ -51,13 +42,7 @@ PORT=3000
 Start the server:
 
 ```bash
-npm start
-```
-
-If you are using nodemon:
-
-```bash
-npm run dev
+node app.js
 ```
 
 ---
@@ -113,28 +98,6 @@ online-bookstore/
 
 ---
 
-## Response Format
-
-Successful response:
-
-```json
-{
-  "success": true,
-  "data": {}
-}
-```
-
-Error response:
-
-```json
-{
-  "success": false,
-  "message": "Error message"
-}
-```
-
----
-
 ## Data Storage
 
 The application stores its data inside the `db` folder:
@@ -154,14 +117,3 @@ Example:
 ```env
 PORT=3000
 ```
-
----
-
-## Notes
-
-- The project uses JSON files instead of a database.
-- All API responses are returned in JSON format.
-- Input validation is handled in `validations.js`.
-- Business logic is separated into the `services` folder.
-- Routing is separated by resource inside the `routes` folder.
-- The `.env` file is ignored by Git.
