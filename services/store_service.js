@@ -1,7 +1,7 @@
 import { readData, saveData } from "./file_service.js";
 
 const DB_BASE_PATH = process.env.DB_BASE_PATH;
-const STARTING_BALANCE = process.env.STARTING_BALANCE;
+const STARTING_BALANCE = Number(process.env.STARTING_BALANCE);
 
 export async function getBooks(inStock, maxPrice, search) {
   let books = await readData(DB_BASE_PATH + "/books.json");
@@ -114,7 +114,7 @@ export async function checkOutAndCreateOrder(customerId) {
 
   for (const book of customer.cart) {
     const bookToBy = await getBookById(book.bookId);
-    if (book.quantity > bookToBy.stock) {
+    if (!book || book.quantity > bookToBy.stock) {
       const error = new Error("not enough books in the inventory to buy!");
       error.status = 400;
       throw error;
@@ -129,14 +129,14 @@ export async function checkOutAndCreateOrder(customerId) {
     throw error;
   }
 
-  customer.balance -= total;
-  customer.cart = [];
-
   const booksInventory = await readData(DB_BASE_PATH + "/books.json");
   for (const book of customer.cart) {
     const bookToBy = await getBookById(book.bookId);
     bookToBy.stock -= book.quantity;
   }
+
+  customer.balance -= total;
+  customer.cart = [];
 
   const orders = await readData(DB_BASE_PATH + "/orders.json");
   const newOrderId = orders.length > 0 ? orders[orders.length - 1].id + 1 : 1;
@@ -151,6 +151,7 @@ export async function checkOutAndCreateOrder(customerId) {
 
   orders.push(newOrder);
   await saveData(DB_BASE_PATH + "/customers.json", customers);
+  await saveData(DB_BASE_PATH + "/books.json", booksInventory);
   await saveData(DB_BASE_PATH + "/orders.json", orders);
 }
 
